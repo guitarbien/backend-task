@@ -20,7 +20,7 @@ Route::group(['middleware' => 'auth.token'], function() {
     Route::delete('/todos', 'TodoController@deleteBatch');
 
     Route::get('/token', 'TokenController@index');
-    Route::put('/token/refresh', 'TokenController@update');
+    Route::put('/token', 'TokenController@update');
 });
 
 Route::post('/token', 'TokenController@store');

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\Todo as TodoResource;
+use App\Todo;
 use Illuminate\Http\Request;
 
 /*
@@ -15,4 +17,12 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/todo/{id}', function (int $id) {
+    return new TodoResource(Todo::find($id));
+});
+
+Route::get('/todos', function () {
+    return TodoResource::collection(Todo::all());
 });

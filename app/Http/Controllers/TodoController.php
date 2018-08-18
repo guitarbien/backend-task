@@ -69,8 +69,15 @@ class TodoController extends Controller
      * @param  \App\Todo $todo
      * @return JsonResponse
      */
-    public function destroy(Todo $todo): JsonResponse
+    public function delete(Todo $todo): JsonResponse
     {
-        //
+        try {
+            $todo->delete();
+        }
+        catch (\Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json(null, 204);
     }
 }

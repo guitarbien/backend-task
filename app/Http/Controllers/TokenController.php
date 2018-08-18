@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Firebase\JWT\BeforeValidException;
-use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
-use Firebase\JWT\SignatureInvalidException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use UnexpectedValueException;
 
 /**
  * Class TokenController
@@ -30,18 +26,9 @@ class TokenController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // todo : implement auth logic here if you want
+        $payload = JWT::decode($request->header('token'), $this->secret, ['HS256']);
 
-        try {
-            $jwt     = $request->header('token');
-            $decoded = JWT::decode($jwt, $this->secret, ['HS256']);
-        } catch (SignatureInvalidException | ExpiredException $e) {
-            return response()->json(null, 401);
-        } catch (UnexpectedValueException | BeforeValidException $e) {
-            return response()->json(null, 500);
-        }
-
-        return response()->json($decoded, 200);
+        return response()->json(["TTL" => $payload->exp - time()], 200);
     }
 
     /**
@@ -49,10 +36,9 @@ class TokenController extends Controller
      */
     public function store(): JsonResponse
     {
-        $token = ["id" => 5566];
-        array_merge($token, $this->getExpiredTime());
+        $payload = $this->refreshExpiredTime(["id" => 5566]);
 
-        $jwt = JWT::encode($token, $this->secret);
+        $jwt = JWT::encode($payload, $this->secret);
 
         return $this->withToken($jwt);
     }
@@ -63,27 +49,23 @@ class TokenController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        try {
-            $jwt     = $request->header('token');
-            $decoded = (array)JWT::decode($jwt, $this->secret, ['HS256']);
+        $jwt = $request->header('token');
 
-            array_merge($decoded, $this->getExpiredTime());
-            $jwt = JWT::encode($decoded, $this->secret);
-        } catch (SignatureInvalidException | ExpiredException $e) {
-            return response()->json(null, 401);
-        } catch (UnexpectedValueException | BeforeValidException $e) {
-            return response()->json(null, 500);
-        }
+        $decoded = (array)JWT::decode($jwt, $this->secret, ['HS256']);
+        $payload = $this->refreshExpiredTime($decoded);
+
+        $jwt = JWT::encode($payload, $this->secret);
 
         return $this->withToken($jwt);
     }
 
     /**
+     * @param array $payload
      * @return array
      */
-    private function getExpiredTime(): array
+    private function refreshExpiredTime(array $payload): array
     {
-        return ["exp" => time() + env('JWT_TTL', 60)];
+        return array_merge($payload, ["exp" => time() + env('JWT_TTL', 60)]);
     }
 
     /**

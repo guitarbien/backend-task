@@ -11,13 +11,16 @@
 |
 */
 
-Route::get('/todos', 'TodoController@index');
-Route::get('/todos/{todo}', 'TodoController@show');
-Route::post('/todos', 'TodoController@store');
-Route::put('/todos/{todo}', 'TodoController@update');
-Route::delete('/todos/{todo}', 'TodoController@delete');
-Route::delete('/todos', 'TodoController@deleteBatch');
+Route::group(['middleware' => 'auth.token'], function() {
+    Route::get('/todos', 'TodoController@index');
+    Route::get('/todos/{todo}', 'TodoController@show');
+    Route::post('/todos', 'TodoController@store');
+    Route::put('/todos/{todo}', 'TodoController@update');
+    Route::delete('/todos/{todo}', 'TodoController@delete');
+    Route::delete('/todos', 'TodoController@deleteBatch');
 
-Route::get('/token', 'TokenController@index');
+    Route::get('/token', 'TokenController@index');
+    Route::put('/token/refresh', 'TokenController@update');
+});
+
 Route::post('/token', 'TokenController@store');
-Route::put('/token/refresh', 'TokenController@update');

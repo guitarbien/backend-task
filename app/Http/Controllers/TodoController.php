@@ -55,7 +55,12 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo): JsonResponse
     {
-        //
+        $todo->setAttribute('title', $request->get('title'));
+        $todo->setAttribute('content', $request->get('content'));
+        $todo->setAttribute('attachment', $request->get('attachment'));
+        $todo->save();
+
+        return response()->json($todo, 200);
     }
 
     /**

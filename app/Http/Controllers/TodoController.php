@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Todo;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -14,9 +15,9 @@ class TodoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json(Todo::all());
     }
@@ -24,10 +25,10 @@ class TodoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $todo = Todo::create($request->all());
 
@@ -37,10 +38,10 @@ class TodoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Todo  $todo
-     * @return \Illuminate\Http\Response
+     * @param  \App\Todo $todo
+     * @return JsonResponse
      */
-    public function show(Todo $todo)
+    public function show(Todo $todo): JsonResponse
     {
         return response()->json($todo);
     }
@@ -48,11 +49,11 @@ class TodoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Todo  $todo
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Todo $todo
+     * @return JsonResponse
      */
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request, Todo $todo): JsonResponse
     {
         //
     }
@@ -60,10 +61,10 @@ class TodoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Todo  $todo
-     * @return \Illuminate\Http\Response
+     * @param  \App\Todo $todo
+     * @return JsonResponse
      */
-    public function destroy(Todo $todo)
+    public function destroy(Todo $todo): JsonResponse
     {
         //
     }

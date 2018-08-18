@@ -83,7 +83,7 @@ class TokenController extends Controller
      */
     private function getExpiredTime(): array
     {
-        return ["exp" => time() + 60];
+        return ["exp" => time() + env('JWT_TTL', 60)];
     }
 
     /**

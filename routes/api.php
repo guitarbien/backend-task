@@ -16,6 +16,7 @@ Route::get('/todos/{todo}', 'TodoController@show');
 Route::post('/todos', 'TodoController@store');
 Route::put('/todos/{todo}', 'TodoController@update');
 Route::delete('/todos/{todo}', 'TodoController@delete');
+Route::delete('/todos', 'TodoController@deleteBatch');
 
 Route::get('/token', 'TokenController@index');
 Route::post('/token', 'TokenController@store');

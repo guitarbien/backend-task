@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Todo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
  * Class TodoController
@@ -77,6 +78,19 @@ class TodoController extends Controller
         catch (\Exception $e) {
             return response()->json(null, 500);
         }
+
+        return response()->json(null, 204);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteBatch(Request $request): JsonResponse
+    {
+        $ids = Collection::wrap($request->get('todos'))->pluck('id')->toArray();
+
+        Todo::destroy($ids);
 
         return response()->json(null, 204);
     }
